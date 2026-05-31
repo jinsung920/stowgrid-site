@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StowGrid | Container Load Planner</title>
+  <meta name="description" content="StowGrid is a container load planning tool for cargo space optimization and visual loading simulation." />
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent2: #22c55e;
+      --border: #1e293b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #111827 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 20px;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--text);
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 90px 24px 70px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 58px;
+      line-height: 1.05;
+      margin: 0 0 24px;
+      letter-spacing: -2px;
+    }
+
+    .subtitle {
+      font-size: 20px;
+      color: var(--muted);
+      max-width: 650px;
+      margin-bottom: 32px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 14px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .primary {
+      background: var(--accent);
+      color: #020617;
+    }
+
+    .secondary {
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .mockup {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .container-box {
+      height: 280px;
+      border: 2px solid #334155;
+      border-radius: 16px;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      background: #020617;
+    }
+
+    .cargo {
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      min-height: 30px;
+    }
+
+    .cargo:nth-child(2n) {
+      grid-column: span 2;
+    }
+
+    .cargo:nth-child(3n) {
+      grid-row: span 2;
+    }
+
+    .stats {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 20px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 50px 24px;
+    }
+
+    .section-title {
+      font-size: 34px;
+      margin-bottom: 24px;
+      letter-spacing: -1px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .feature {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .feature h3 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    .feature p {
+      color: var(--muted);
+      margin-bottom: 0;
+    }
+
+    .contact {
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .contact p {
+      color: var(--muted);
+    }
+
+    footer {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      margin-left: 16px;
+    }
+
+    footer a:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 800px) {
+      header {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      nav a {
+        margin-left: 0;
+        margin-right: 16px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 50px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">Stow<span>Grid</span></div>
+    <nav>
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms</a>
+      <a href="support.html">Support</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="badge">Container Load Planner</div>
+        <h1>Plan smarter. Load faster.</h1>
+        <p class="subtitle">
+          StowGrid helps you simulate container loading, optimize cargo space,
+          and make better loading decisions with a simple visual planning tool.
+        </p>
+        <div class="buttons">
+          <a class="button primary" href="support.html">Contact Us</a>
+          <a class="button secondary" href="#features">View Features</a>
+        </div>
+      </div>
+
+      <div class="mockup">
+        <div class="container-box">
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+          <div class="cargo"></div>
+        </div>
+        <div class="stats">
+          <div class="stat">
+            <strong>92%</strong>
+            <span>Space Usage</span>
+          </div>
+          <div class="stat">
+            <strong>1</strong>
+            <span>Container</span>
+          </div>
+          <div class="stat">
+            <strong>Fast</strong>
+            <span>Planning</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <h2 class="section-title">Built for practical cargo planning</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>Visual Load Simulation</h3>
+          <p>
+            Preview how cargo can be arranged inside a container before loading starts.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>Space Optimization</h3>
+          <p>
+            Check container utilization and reduce wasted space during shipment planning.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>Simple Workflow</h3>
+          <p>
+            Enter cargo dimensions, quantities, and container type to plan loading faster.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="contact">
+        <h2>StowGrid is in development</h2>
+        <p>
+          For support, partnership, or business inquiries, please contact us.
+        </p>
+        <a class="button primary" href="mailto:support@stowgrid.ai">support@stowgrid.ai</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© 2026 StowGrid. All rights reserved.</div>
+    <div>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="terms.html">Terms of Service</a>
+      <a href="support.html">Support</a>
+    </div>
+  </footer>
+</body>
+</html>
